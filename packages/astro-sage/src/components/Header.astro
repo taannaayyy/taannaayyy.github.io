@@ -47,8 +47,9 @@ const links = baseLinks.flatMap(link =>
   {t.a11y.skipToContent}
 </a>
 
-<header class="app-layout">
-  <div class="border-border flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b py-5 sm:py-6">
+<!-- On phones the header stays pinned while scrolling, so the nav is always in reach. -->
+<header class="app-layout bg-background max-md:sticky max-md:top-0 max-md:z-30">
+  <div class="border-border flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b py-3 sm:py-6">
     <a
       href={getRelativeLocaleUrl(locale, "")}
       class="site-title text-xl font-semibold whitespace-nowrap sm:text-2xl"

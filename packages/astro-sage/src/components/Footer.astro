@@ -5,9 +5,16 @@ import config from "@sage/config";
 
 type Props = {
   noMarginTop?: boolean;
+  /** Hide the social links, e.g. on a page that already lists them. */
+  hideSocials?: boolean;
 } & HTMLAttributes<"footer">;
 
-const { noMarginTop = false, class: className, ...attrs } = Astro.props;
+const {
+  noMarginTop = false,
+  hideSocials = false,
+  class: className,
+  ...attrs
+} = Astro.props;
 const currentYear = new Date().getFullYear();
 ---
 
@@ -19,6 +26,6 @@ const currentYear = new Date().getFullYear();
     <p>
       © {currentYear} {config.site.author}
     </p>
-    <SocialList />
+    {!hideSocials && <SocialList />}
   </div>
 </footer>

@@ -9,10 +9,22 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer base {
-  /* No rubber-band bounce past the top or bottom of the page. */
-  html,
-  body {
-    overscroll-behavior-y: none;
+  /*
+   * The root gets the page colour, because body's container-type stops its
+   * background from reaching the canvas that an overscroll bounce reveals.
+   */
+  html {
+    background: var(--bg);
+  }
+  /*
+   * No rubber-band bounce on mouse and trackpad devices. Touch devices keep
+   * their native bounce: in iOS Safari, overscroll-behavior: none makes the
+   * address bar flicker at the bottom of the page.
+   */
+  @media (hover: hover) and (pointer: fine) {
+    html {
+      overscroll-behavior-y: none;
+    }
   }
   /* Lets breakout figures measure the viewport without its scrollbar (cqw). */
   body {
@@ -111,6 +123,13 @@
   /* Tabler arrow-up-right (MIT). */
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 7l-10 10'/%3E%3Cpath d='M8 7h9v9'/%3E%3C/svg%3E")
     center / contain no-repeat;
+}
+
+/* Keep in-page links (e.g. the table of contents) clear of the pinned phone header. */
+@media (width < 48rem) {
+  html {
+    scroll-padding-top: 6.5rem;
+  }
 }
 
 :target {
