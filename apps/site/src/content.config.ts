@@ -4,6 +4,7 @@ import { glob } from "astro/loaders";
 import { defineSageCollections } from "astro-sage/content";
 import config from "../sage.config";
 
+// Project drafts; the site has no Projects pages at the moment.
 const projects = defineCollection({
   loader: glob({
     pattern: "**/[^_]*.{md,mdx}",
@@ -13,7 +14,6 @@ const projects = defineCollection({
     title: z.string(),
     /** One or two sentences for cards and meta tags. */
     summary: z.string(),
-    /** Used by the tag filter on /projects. */
     tags: z.array(z.string()).default([]),
     stack: z.array(z.string()).default([]),
     repoUrl: z.url().optional(),

@@ -19,7 +19,6 @@ export default defineSageConfig({
       "I’m a computer engineer working mainly on machine learning. I believe teaching is the best way to learn, so this site is where I share my notes along the way. Everything here is written by me; AI only helps polish the wording.",
   },
   nav: [
-    { path: "/projects", label: "Projects" },
     { path: "/posts", label: "Posts" },
     { path: "/about", label: "About" },
     { path: "/contact", label: "Contact" },

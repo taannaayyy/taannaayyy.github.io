@@ -1,25 +1,3 @@
-/** Interest areas shown on the home page. */
-export const interests = [
-  {
-    title: "LLMs",
-    blurb:
-      "Large language models: how they work, how to adapt them, and how to build with them.",
-  },
-  {
-    title: "NLP",
-    blurb:
-      "Natural language processing, from classic methods to modern neural models.",
-  },
-  {
-    title: "Computer Vision",
-    blurb: "Teaching machines to see: detection, tracking and video analytics.",
-  },
-  {
-    title: "ML in Finance",
-    blurb: "Machine learning for financial data, risk and decision making.",
-  },
-] as const;
-
 export const contactEmail = "taalpkonur@gmail.com";
 
 const resumeSubject = "Resume Request";

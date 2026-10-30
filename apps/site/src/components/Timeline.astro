@@ -77,8 +77,8 @@ const galleryFor = (name: string) =>
         <ul class="links">
           {item.links.map(link => (
             <li>
-              <a href={link.url} rel="noopener">
-                {link.text} ↗
+              <a href={link.url} rel="noopener" class="link-arrow">
+                {link.text}
               </a>
             </li>
           ))}
@@ -86,8 +86,12 @@ const galleryFor = (name: string) =>
       )}
       {item.paper && (
         <div class="paper">
-          <a href={item.paper.url} rel="noopener" class="paper-title">
-            {item.paper.title} ↗
+          <a
+            href={item.paper.url}
+            rel="noopener"
+            class="paper-title link-arrow"
+          >
+            {item.paper.title}
           </a>
           <p class="paper-authors">
             {item.paper.authors.map((author, i) => (

@@ -89,8 +89,12 @@ const formatDate = (date: string) =>
   <Section id="github-heading" label="GitHub activity">
     <div class="activity">
       <p class="summary">
-        <a href={`https://github.com/${user}`} rel="noopener">
-          {total} contributions in the last year ↗
+        <a
+          href={`https://github.com/${user}`}
+          rel="noopener"
+          class="link-arrow"
+        >
+          {total} contributions in the last year
         </a>
       </p>
       <svg

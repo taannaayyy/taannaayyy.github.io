@@ -5,7 +5,6 @@ import { postFilter } from "@sage/utils/postFilter";
 import IconSunHigh from "@sage/assets/icons/IconSunHigh.svg";
 import IconSearch from "@sage/assets/icons/IconSearch.svg";
 import IconMoon from "@sage/assets/icons/IconMoon.svg";
-import IconMenuDeep from "@sage/assets/icons/IconMenuDeep.svg";
 import { stripBase, stripLocale } from "@sage/utils/withBase";
 import { useTranslations } from "@sage/i18n";
 import config from "@sage/config";
@@ -49,7 +48,7 @@ const links = baseLinks.flatMap(link =>
 </a>
 
 <header class="app-layout">
-  <div class="border-border flex items-center justify-between gap-6 border-b py-5 sm:py-6">
+  <div class="border-border flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b py-5 sm:py-6">
     <a
       href={getRelativeLocaleUrl(locale, "")}
       class="site-title text-xl font-semibold whitespace-nowrap sm:text-2xl"
@@ -58,7 +57,7 @@ const links = baseLinks.flatMap(link =>
     </a>
 
     <nav aria-label="Main" class="flex items-center gap-1 sm:gap-2">
-      <ul class="hidden items-center gap-5 md:flex">
+      <ul class="flex items-center gap-4 sm:gap-5">
         {links.map(l => (
           <li>
             <a
@@ -97,24 +96,6 @@ const links = baseLinks.flatMap(link =>
       )}
 
       <slot name="actions" />
-
-      <details class="mobile-menu md:hidden">
-        <summary class="icon-btn" aria-label={t.a11y.openMenu}>
-          <IconMenuDeep class="size-5" />
-        </summary>
-        <ul>
-          {links.map(l => (
-            <li>
-              <a
-                href={getRelativeLocaleUrl(locale, l.path.slice(1))}
-                class:list={{ "active-nav": isActive(l.path) }}
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </details>
     </nav>
   </div>
 </header>
@@ -150,36 +131,6 @@ const links = baseLinks.flatMap(link =>
   }
   .icon-btn:hover {
     color: var(--fg);
-    background: var(--bg-raised);
-  }
-  .mobile-menu {
-    position: relative;
-  }
-  .mobile-menu summary {
-    list-style: none;
-    cursor: pointer;
-  }
-  .mobile-menu summary::-webkit-details-marker {
-    display: none;
-  }
-  .mobile-menu ul {
-    position: absolute;
-    inset-inline-end: 0;
-    top: calc(100% + 0.5rem);
-    z-index: 20;
-    min-width: 11rem;
-    padding: 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    background: var(--bg);
-    box-shadow: 0 8px 24px -12px rgb(58 49 38 / 0.35);
-  }
-  .mobile-menu li a {
-    display: block;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.375rem;
-  }
-  .mobile-menu li a:hover {
     background: var(--bg-raised);
   }
 </style>

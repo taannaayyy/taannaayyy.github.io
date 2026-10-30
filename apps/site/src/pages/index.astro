@@ -10,14 +10,10 @@ import { getSortedPosts } from "@sage/utils/getSortedPosts";
 import config from "@sage/config";
 import Section from "../components/Section.astro";
 import GithubActivity from "../components/GithubActivity.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import { interests } from "../data/site";
-import { getProjects } from "../utils/projects";
 
 const { home, site, posts: postsConfig } = config;
 
 const posts = getSortedPosts(await getCollection("posts"));
-const featuredProjects = (await getProjects()).filter(p => p.data.featured);
 ---
 
 <Layout>
@@ -54,30 +50,6 @@ const featuredProjects = (await getProjects()).filter(p => p.data.featured);
       </Section>
 
       <GithubActivity user="taannaayyy" />
-
-      <Section id="interests-heading" label="Interests">
-        <ul class="interests">
-          {interests.map(interest => (
-            <li class="interest">
-              <h3 class="interest-title">{interest.title}</h3>
-              <p class="interest-blurb">{interest.blurb}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {featuredProjects.length > 0 && (
-        <Section id="projects-heading" label="Featured projects">
-          <ul>
-            {featuredProjects.map(project => (
-              <ProjectCard project={project} variant="h3" />
-            ))}
-          </ul>
-          <a href="/projects/" class="more text-accent">
-            All projects <IconArrowRight class="size-4" />
-          </a>
-        </Section>
-      )}
     </div>
   </main>
   <Footer />
@@ -100,31 +72,6 @@ const featuredProjects = (await getProjects()).filter(p => p.data.featured);
     line-height: 1.55;
     color: color-mix(in oklab, var(--fg) 85%, var(--bg));
     text-wrap: pretty;
-  }
-  .interests {
-    display: grid;
-    gap: 0.75rem;
-    margin-top: 1.25rem;
-  }
-  @media (min-width: 40rem) {
-    .interests {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  .interest {
-    padding: 1rem 1.1rem;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-  }
-  .interest-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  .interest-blurb {
-    margin-top: 0.3rem;
-    color: var(--fg-muted);
-    font-size: 0.95rem;
-    line-height: 1.5;
   }
   .empty {
     margin-top: 1.25rem;
