@@ -16,7 +16,7 @@ export default defineSageConfig({
   home: {
     title: "Hi, I’m Tanay Alpkonur",
     intro:
-      "I’m a computer engineer working mainly on machine learning. I believe teaching is the best way to learn, so this site is where I share my notes along the way. Everything here is written by me; AI only helps polish the wording.",
+      "I’m a computer engineer working mainly on machine learning. I believe teaching is the best way to learn, so this site is where I share my notes along the way. Everything here is my own understanding, in my own words, mistakes and all. Even though I write my notes in English myself, it isn’t my first language, so I use AI to help with grammar and phrasing before sharing them here.",
   },
   nav: [
     { path: "/posts", label: "Posts" },
