@@ -13,7 +13,7 @@ const projects = defineCollection({
     title: z.string(),
     /** One or two sentences for cards and meta tags. */
     summary: z.string(),
-    /** Topic tags shared with posts: llms, nlp, computer-vision, ml-in-finance. */
+    /** Used by the tag filter on /projects. */
     tags: z.array(z.string()).default([]),
     stack: z.array(z.string()).default([]),
     repoUrl: z.url().optional(),

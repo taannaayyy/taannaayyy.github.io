@@ -1,0 +1,142 @@
+---
+import { getCollection } from "astro:content";
+import IconArrowRight from "@sage/assets/icons/IconArrowRight.svg";
+import Layout from "@sage/layouts/Layout.astro";
+import Header from "@sage/components/Header.astro";
+import Footer from "@sage/components/Footer.astro";
+import Socials from "@sage/components/Socials.astro";
+import Card from "@sage/components/Card.astro";
+import { getSortedPosts } from "@sage/utils/getSortedPosts";
+import config from "@sage/config";
+import Section from "../components/Section.astro";
+import GithubActivity from "../components/GithubActivity.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { interests } from "../data/site";
+import { getProjects } from "../utils/projects";
+
+const { home, site, posts: postsConfig } = config;
+
+const posts = getSortedPosts(await getCollection("posts"));
+const featuredProjects = (await getProjects()).filter(p => p.data.featured);
+---
+
+<Layout>
+  <Header />
+  <main id="main-content" class="app-layout pb-12">
+    <div class="max-w-measure mx-auto">
+      <section class="hero">
+        <h1>{home.title ?? site.title}</h1>
+        {home.intro && <p class="intro" set:html={home.intro} />}
+        <div class="mt-6">
+          <Socials
+            rss={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+          />
+        </div>
+      </section>
+
+      <Section id="latest-heading" label="Latest">
+        {posts.length > 0 ? (
+          <>
+            <ul>
+              {posts.slice(0, postsConfig.perIndex).map(post => (
+                <Card variant="h3" {...post} />
+              ))}
+            </ul>
+            <a href="/posts/" class="more text-accent">
+              All posts <IconArrowRight class="size-4" />
+            </a>
+          </>
+        ) : (
+          <p class="empty">
+            The first posts are on their way. Check back soon.
+          </p>
+        )}
+      </Section>
+
+      <GithubActivity user="taannaayyy" />
+
+      <Section id="interests-heading" label="Interests">
+        <ul class="interests">
+          {interests.map(interest => (
+            <li class="interest">
+              <h3 class="interest-title">{interest.title}</h3>
+              <p class="interest-blurb">{interest.blurb}</p>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      {featuredProjects.length > 0 && (
+        <Section id="projects-heading" label="Featured projects">
+          <ul>
+            {featuredProjects.map(project => (
+              <ProjectCard project={project} variant="h3" />
+            ))}
+          </ul>
+          <a href="/projects/" class="more text-accent">
+            All projects <IconArrowRight class="size-4" />
+          </a>
+        </Section>
+      )}
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .hero {
+    padding-top: clamp(2.5rem, 6vw, 5rem);
+  }
+  .hero h1 {
+    font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 60;
+  }
+  .intro {
+    margin-top: 1.25rem;
+    font-size: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+    line-height: 1.55;
+    color: color-mix(in oklab, var(--fg) 85%, var(--bg));
+    text-wrap: pretty;
+  }
+  .interests {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+  @media (min-width: 40rem) {
+    .interests {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .interest {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+  }
+  .interest-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .interest-blurb {
+    margin-top: 0.3rem;
+    color: var(--fg-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .empty {
+    margin-top: 1.25rem;
+    color: var(--fg-muted);
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 1rem;
+  }
+  .more:hover {
+    text-decoration: underline;
+  }
+</style>

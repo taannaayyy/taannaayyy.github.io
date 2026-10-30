@@ -1,16 +1,10 @@
 {
   "name": "astro-sage",
+  "private": true,
   "version": "0.1.5",
   "description": "A readability-first Astro blog theme: serif typography, warm sepia palette, pinned TOC, KaTeX, Expressive Code.",
   "type": "module",
   "license": "MIT",
-  "keywords": [
-    "astro",
-    "astro-integration",
-    "withastro",
-    "blog",
-    "theme"
-  ],
   "exports": {
     ".": "./src/index.ts",
     "./content": "./src/content.ts",
@@ -19,12 +13,6 @@
     "./layouts/*": "./src/layouts/*",
     "./styles/*": "./src/styles/*"
   },
-  "files": [
-    "src",
-    "!src/**/*.test.ts",
-    "FEATURES.md",
-    "CHANGELOG.md"
-  ],
   "peerDependencies": {
     "astro": "^7.0.0",
     "playwright": "^1.50.0"
@@ -62,9 +50,7 @@
     "playwright": "^1.64.1"
   },
   "scripts": {
-    "test": "node --test src/**/*.test.ts",
-    "prepack": "node scripts/pack-docs.mjs",
-    "postpack": "node scripts/pack-docs.mjs --clean"
+    "test": "node --test src/**/*.test.ts"
   },
   "peerDependenciesMeta": {
     "playwright": {
@@ -77,13 +63,7 @@
     "directory": "packages/astro-sage"
   },
   "homepage": "https://astro-sage.chintak.sh",
-  "bugs": {
-    "url": "https://github.com/chintak/astro-sage/issues"
-  },
   "author": "Chintak Sheth",
-  "publishConfig": {
-    "access": "public"
-  },
   "engines": {
     "node": ">=22.12.0"
   }

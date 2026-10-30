@@ -9,6 +9,11 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer base {
+  /* No rubber-band bounce past the top or bottom of the page. */
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
   /* Lets breakout figures measure the viewport without its scrollbar (cqw). */
   body {
     container-type: inline-size;

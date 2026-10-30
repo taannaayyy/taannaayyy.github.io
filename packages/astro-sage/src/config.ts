@@ -47,6 +47,7 @@ const config: ResolvedSageConfig = {
   },
   typography: { serif: userConfig.typography?.serif ?? "newsreader" },
   home: userConfig.home ?? {},
+  nav: userConfig.nav,
   comments: userConfig.comments ?? { provider: false },
   posts: {
     perPage: userConfig.posts?.perPage ?? 4,

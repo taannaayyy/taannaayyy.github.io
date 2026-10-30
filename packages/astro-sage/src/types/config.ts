@@ -74,6 +74,8 @@ interface SocialLink {
    * Override when the default wording doesn't fit.
    */
   linkTitle?: string;
+  /** Visible text in the footer list, e.g. "LinkedIn". Defaults to the capitalised name. */
+  label?: string;
 }
 
 interface ShareLink {
@@ -110,6 +112,20 @@ interface TypographyConfig {
    * DEFAULT_SERIF_FALLBACKS / DEFAULT_MONO_FALLBACKS.
    */
   fallbacks?: { serif?: string[]; mono?: string[] };
+}
+
+interface NavLink {
+  /** Site path, e.g. "/projects". */
+  path: string;
+  label: string;
+}
+
+interface RoutesConfig {
+  /**
+   * Injected route patterns to skip, so the site can provide its own page in
+   * src/pages/, e.g. ["/", "/about"].
+   */
+  exclude?: string[];
 }
 
 interface HomeConfig {
@@ -172,13 +188,19 @@ interface CitationConfig {
   publication?: string;
 }
 
-export type { CommentsConfig, EmbedTheme };
+export type { CommentsConfig, EmbedTheme, NavLink };
 
 export interface SageConfig {
   site: SiteConfig;
   citation?: CitationConfig;
   typography?: TypographyConfig;
   home?: HomeConfig;
+  /**
+   * Header navigation. Defaults to Posts, Tags, Archives and About. A Series
+   * link is added after Posts whenever a published post belongs to a series.
+   */
+  nav?: NavLink[];
+  routes?: RoutesConfig;
   comments?: CommentsConfig;
   posts?: PostsConfig;
   features?: FeaturesConfig;
@@ -208,6 +230,7 @@ export interface ResolvedSageConfig {
   citation: { enabled: boolean } & Omit<CitationConfig, "enabled">;
   typography: Required<Pick<TypographyConfig, "serif">> & TypographyConfig;
   home: HomeConfig;
+  nav?: NavLink[];
   comments: CommentsConfig;
   posts: Required<PostsConfig>;
   features: Required<FeaturesConfig>;

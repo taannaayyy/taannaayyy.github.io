@@ -28,14 +28,23 @@ public/pagefind/
 test-results/
 playwright-report/
 
-# editors
-.idea/
-.vscode/*
-!.vscode/extensions.json
-*.swp
+# caches
+.cache/
+*.tsbuildinfo
 
-# macOS
+# editors and AI tools
+.idea/
+.vscode/
+.zed/
+.fleet/
+.claude/
+*.swp
+*~
+
+# OS
 .DS_Store
+Thumbs.db
+desktop.ini
 
 # NOTE: apps/site/.sage-cache/ is NOT ignored on purpose: commit it so the
 # deploy build can render Mermaid / Excalidraw diagrams without a browser.

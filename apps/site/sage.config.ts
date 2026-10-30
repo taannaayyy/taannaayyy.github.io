@@ -14,10 +14,18 @@ export default defineSageConfig({
   },
   typography: { serif: "newsreader", opticalSizing: true },
   home: {
-    title: "Tanay Alpkonur",
+    title: "Hi, I’m Tanay Alpkonur",
     intro:
-      "I build machine learning systems and write about what I learn along the way: LLMs, NLP, computer vision and ML in finance.",
+      "I’m a computer engineer working mainly on machine learning. I believe teaching is the best way to learn, so this site is where I share my notes along the way. Everything here is written by me; AI only helps polish the wording.",
   },
+  nav: [
+    { path: "/projects", label: "Projects" },
+    { path: "/posts", label: "Posts" },
+    { path: "/about", label: "About" },
+    { path: "/contact", label: "Contact" },
+  ],
+  // Home and About come from src/pages/ instead of the theme.
+  routes: { exclude: ["/", "/about"] },
   // Giscus is set up in build step 6.
   comments: { provider: false },
   posts: { perPage: 8, perIndex: 6, scheduledPostMargin: 15 * 60 * 1000 },
@@ -30,9 +38,18 @@ export default defineSageConfig({
     search: "pagefind",
   },
   socials: [
-    { name: "github", url: "https://github.com/taannaayyy" },
-    { name: "linkedin", url: "https://linkedin.com/in/tanay-alpkonur" },
-    { name: "mail", url: "mailto:taalpkonur@gmail.com" },
+    {
+      name: "linkedin",
+      label: "LinkedIn",
+      url: "https://linkedin.com/in/tanay-alpkonur",
+    },
+    { name: "github", label: "GitHub", url: "https://github.com/taannaayyy" },
+    {
+      name: "kaggle",
+      label: "Kaggle",
+      url: "https://www.kaggle.com/tanayalpkonur",
+    },
+    { name: "mail", label: "Mail", url: "mailto:taalpkonur@gmail.com" },
   ],
   // shareLinks: defaults to X, LinkedIn, Bluesky, Reddit, Hacker News and email.
 });

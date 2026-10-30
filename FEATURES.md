@@ -1,14 +1,14 @@
 # AstroSage features
 
-A reference for agents and contributors: what the theme supports, how to switch each feature on, and where to find a working example. Keep it accurate. When a feature is added, changed or removed, update this file in the same PR (see [AGENTS.md](AGENTS.md)).
+A reference for what the theme supports, how to switch each feature on, and where to find a working example.
 
-Working examples live in the demo site:
+Working examples live in the upstream AstroSage demo site (removed from this repo):
 
-- [`apps/demo/src/content/posts/showcase/index.mdx`](apps/demo/src/content/posts/showcase/index.mdx) — every content feature, one section each (cited below as *Showcase › Section*).
-- [`apps/demo/src/content/posts/colophon.md`](apps/demo/src/content/posts/colophon.md) — a plain-Markdown post; wiki-link target.
-- [`apps/demo/src/content/posts/series-part-two.md`](apps/demo/src/content/posts/series-part-two.md) — part 2 of a series; scheduled (future `pubDatetime`).
-- [`apps/demo/src/content/pages/about.md`](apps/demo/src/content/pages/about.md) — a page.
-- [`apps/demo/sage.config.ts`](apps/demo/sage.config.ts), [`apps/demo/astro.config.ts`](apps/demo/astro.config.ts) — a full configuration (utterances comments). Live at [astro-sage.chintak.sh](https://astro-sage.chintak.sh).
+- [`apps/demo/src/content/posts/showcase/index.mdx`](https://github.com/chintak/astro-sage/blob/933ff1b2a453cd2d35e5a08bb2c9d8ca7c981648/apps/demo/src/content/posts/showcase/index.mdx) — every content feature, one section each (cited below as *Showcase › Section*).
+- [`apps/demo/src/content/posts/colophon.md`](https://github.com/chintak/astro-sage/blob/933ff1b2a453cd2d35e5a08bb2c9d8ca7c981648/apps/demo/src/content/posts/colophon.md) — a plain-Markdown post; wiki-link target.
+- [`apps/demo/src/content/posts/series-part-two.md`](https://github.com/chintak/astro-sage/blob/933ff1b2a453cd2d35e5a08bb2c9d8ca7c981648/apps/demo/src/content/posts/series-part-two.md) — part 2 of a series; scheduled (future `pubDatetime`).
+- [`apps/demo/src/content/pages/about.md`](https://github.com/chintak/astro-sage/blob/933ff1b2a453cd2d35e5a08bb2c9d8ca7c981648/apps/demo/src/content/pages/about.md) — a page.
+- [`apps/demo/sage.config.ts`](https://github.com/chintak/astro-sage/blob/933ff1b2a453cd2d35e5a08bb2c9d8ca7c981648/apps/demo/sage.config.ts), [`apps/demo/astro.config.ts`](https://github.com/chintak/astro-sage/blob/933ff1b2a453cd2d35e5a08bb2c9d8ca7c981648/apps/demo/astro.config.ts) — a full configuration (utterances comments). Live at [astro-sage.chintak.sh](https://astro-sage.chintak.sh).
 
 ## Tech stack
 
@@ -147,4 +147,4 @@ Diagrams need Chromium at build time (`pnpm add -D playwright && npx playwright 
 - Colours, fonts and measure are CSS custom properties in [`src/styles/theme.css`](packages/astro-sage/src/styles/theme.css). Override them in your own CSS.
 - Components can be imported from `astro-sage/components/*` (e.g. `Figure.astro` in MDX).
 - Code themes live in [`src/markdown/code-themes.ts`](packages/astro-sage/src/markdown/code-themes.ts).
-- Design rationale: [`docs/decisions/`](docs/decisions/).
+- Design rationale: [`docs/decisions/`](https://github.com/chintak/astro-sage/tree/933ff1b2a453cd2d35e5a08bb2c9d8ca7c981648/docs/decisions).

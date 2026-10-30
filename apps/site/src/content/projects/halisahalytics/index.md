@@ -14,7 +14,7 @@ draft: true
 <!--
 Fill in, then set draft: false to publish.
 - summary: one or two sentences, shown on cards and in link previews
-- tags: topic tags shared with posts (llms, nlp, computer-vision, ml-in-finance)
+- tags: e.g. ["nlp", "llms"]; posts get tag pages, projects get a tag filter
 - stack: e.g. ["Python", "PyTorch"]
 - repoUrl / demoUrl: full https:// links
 - demoType: space (Hugging Face Space), video (video or GIF) or link (repo / notebook)

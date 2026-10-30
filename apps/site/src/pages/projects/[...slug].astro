@@ -1,0 +1,159 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import Layout from "@sage/layouts/Layout.astro";
+import Header from "@sage/components/Header.astro";
+import Main from "@sage/components/Main.astro";
+import Footer from "@sage/components/Footer.astro";
+import config from "@sage/config";
+import { getProjects } from "../../utils/projects";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+type Props = { project: CollectionEntry<"projects"> };
+
+const { project } = Astro.props;
+const { title, summary, stack, repoUrl, demoUrl, demoType } = project.data;
+const { Content } = await render(project);
+
+/** YouTube watch / share links → embeddable URL; anything else unchanged. */
+function videoEmbedUrl(url: string) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+  return match
+    ? `https://www.youtube-nocookie.com/embed/${match[1]}`
+    : undefined;
+}
+
+const isImage = demoUrl && /\.(gif|png|jpe?g|webp)$/i.test(demoUrl);
+const isVideoFile = demoUrl && /\.(mp4|webm)$/i.test(demoUrl);
+const youtubeUrl = demoUrl && videoEmbedUrl(demoUrl);
+---
+
+<Layout title={`${title} | ${config.site.title}`} description={summary}>
+  <Header />
+
+  <Main pageTitle={title} pageDesc={summary}>
+    <div class="meta">
+      {stack.length > 0 && <p class="stack">{stack.join(" · ")}</p>}
+      <p class="links">
+        {repoUrl && (
+          <a href={repoUrl} rel="noopener">
+            Code ↗
+          </a>
+        )}
+        {demoUrl && demoType === "link" && (
+          <a href={demoUrl} rel="noopener">
+            Demo ↗
+          </a>
+        )}
+      </p>
+    </div>
+
+    {demoUrl && demoType === "space" && (
+      <figure class="demo">
+        <iframe
+          src={demoUrl}
+          title={`${title} demo`}
+          loading="lazy"
+          class="space"
+        />
+        <figcaption>
+          Live demo.{" "}
+          <a href={demoUrl} rel="noopener">
+            Open full screen ↗
+          </a>
+        </figcaption>
+      </figure>
+    )}
+
+    {demoUrl && demoType === "video" && (
+      <figure class="demo">
+        {isImage ? (
+          <img src={demoUrl} alt={`${title} demo`} loading="lazy" />
+        ) : isVideoFile ? (
+          <video src={demoUrl} controls preload="metadata" />
+        ) : youtubeUrl ? (
+          <iframe
+            src={youtubeUrl}
+            title={`${title} demo video`}
+            loading="lazy"
+            class="video"
+            allow="encrypted-media; picture-in-picture"
+            allowfullscreen
+          />
+        ) : (
+          <a href={demoUrl} rel="noopener">
+            Watch the demo ↗
+          </a>
+        )}
+      </figure>
+    )}
+
+    <div class="app-prose mt-8">
+      <Content />
+    </div>
+
+    <a href="/projects/" class="back">
+      ← All projects
+    </a>
+  </Main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .meta {
+    display: grid;
+    gap: 0.35rem;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    color: var(--fg-muted);
+  }
+  .meta a,
+  .back {
+    color: var(--accent);
+  }
+  .meta a:hover,
+  .back:hover {
+    text-decoration: underline;
+  }
+  .stack {
+    color: var(--sage);
+  }
+  .links {
+    display: flex;
+    gap: 1rem;
+  }
+  .demo {
+    margin-top: 2rem;
+  }
+  .demo iframe,
+  .demo img,
+  .demo video {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+  }
+  .space {
+    height: 40rem;
+  }
+  .video {
+    aspect-ratio: 16 / 9;
+  }
+  .demo figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+  }
+  .back {
+    display: inline-block;
+    margin-top: 3rem;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+  }
+</style>

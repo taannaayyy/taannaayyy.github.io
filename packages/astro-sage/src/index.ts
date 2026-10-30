@@ -419,7 +419,9 @@ export default function astroSage(config: SageConfig): AstroIntegration {
           },
         });
 
+        const excluded = new Set(config.routes?.exclude ?? []);
         for (const [pattern, entry] of ROUTES) {
+          if (excluded.has(pattern)) continue;
           injectRoute({ pattern, entrypoint: join(srcDir, entry) });
         }
       },

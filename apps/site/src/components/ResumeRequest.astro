@@ -1,0 +1,65 @@
+---
+import { resumeGmailUrl, resumeMailtoUrl } from "../data/site";
+---
+
+<aside class="resume-request" aria-labelledby="resume-heading">
+  <h2 id="resume-heading" class="resume-title">
+    Would you like my resume?
+  </h2>
+  <p class="resume-text">
+    I’d be happy to share it with you. Just send me a quick request.
+  </p>
+  <a href={resumeGmailUrl} target="_blank" rel="noopener" class="resume-button">
+    Request my resume
+  </a>
+  <p class="resume-alt">
+    Don’t use Gmail? You can also{" "}
+    <a href={resumeMailtoUrl}>send the request from your email app</a>.
+  </p>
+</aside>
+
+<style>
+  .resume-request {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--bg-raised);
+  }
+  .resume-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+  .resume-text {
+    margin-top: 0.4rem;
+    color: var(--fg-muted);
+  }
+  .resume-button {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-fg);
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: filter 120ms;
+  }
+  .resume-button:hover {
+    filter: brightness(1.08);
+  }
+  .resume-alt {
+    margin-top: 0.75rem;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+  }
+  .resume-alt a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .resume-alt a:hover {
+    color: var(--accent);
+  }
+</style>

@@ -25,15 +25,19 @@ const hasSeries = (await getCollection("posts")).some(
   post => postFilter(post) && post.data.series
 );
 
-const links = [
+const baseLinks = config.nav ?? [
   { path: "/posts", label: t.nav.posts },
-  ...(hasSeries ? [{ path: "/series", label: t.nav.series }] : []),
   { path: "/tags", label: t.nav.tags },
   ...(features.showArchives
     ? [{ path: "/archives", label: t.nav.archives }]
     : []),
   { path: "/about", label: t.nav.about },
 ];
+const links = baseLinks.flatMap(link =>
+  hasSeries && link.path === "/posts"
+    ? [link, { path: "/series", label: t.nav.series }]
+    : [link]
+);
 ---
 
 <a
@@ -119,6 +123,12 @@ const links = [
   .site-title {
     font-variation-settings: "opsz" 40;
     letter-spacing: -0.01em;
+    color: var(--fg-muted);
+    transition: color 120ms;
+  }
+  .site-title:hover,
+  .site-title:focus-visible {
+    color: var(--fg);
   }
   .nav-link {
     color: var(--fg-muted);

@@ -1,0 +1,202 @@
+---
+/**
+ * GitHub contribution graph, read from GitHub's own contributions page when
+ * the site builds (the deploy workflow rebuilds daily). Renders nothing if
+ * the page can't be fetched or its markup changes.
+ */
+import Section from "./Section.astro";
+
+type Day = { date: string; count: number; level: number };
+type Props = { user: string };
+
+const { user } = Astro.props;
+
+/** Each day is a <td data-date data-level id> with a <tool-tip for=id> holding its count. */
+function parseCalendar(html: string): Day[] {
+  const counts = new Map<string, number>();
+  for (const [, id, label] of html.matchAll(
+    /<tool-tip[^>]*\bfor="([^"]+)"[^>]*>([^<]*)<\/tool-tip>/g
+  )) {
+    counts.set(id, Number(label.match(/^(\d+) contribution/)?.[1] ?? 0));
+  }
+  const attr = (tag: string, name: string) =>
+    tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
+  return [...html.matchAll(/<td\b[^>]*\bdata-date="[^"]*"[^>]*>/g)]
+    .map(([tag]) => ({
+      date: attr(tag, "data-date") ?? "",
+      level: Number(attr(tag, "data-level") ?? 0),
+      count: counts.get(attr(tag, "id") ?? "") ?? 0,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+let days: Day[] = [];
+try {
+  const res = await fetch(`https://github.com/users/${user}/contributions`, {
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (res.ok) days = parseCalendar(await res.text());
+} catch {
+  // Offline or GitHub is unreachable: leave the graph out of this build.
+}
+
+const total = days.reduce((sum, day) => sum + day.count, 0);
+
+// Columns are weeks starting on Sunday, like GitHub.
+const CELL = 10;
+const GAP = 3;
+const STEP = CELL + GAP;
+const LEFT = 30;
+const TOP = 16;
+const firstWeekday = days.length ? new Date(days[0].date).getUTCDay() : 0;
+const cells = days.map((day, i) => {
+  const index = i + firstWeekday;
+  return {
+    ...day,
+    x: LEFT + Math.floor(index / 7) * STEP,
+    y: TOP + (index % 7) * STEP,
+  };
+});
+const weeks = Math.ceil((days.length + firstWeekday) / 7);
+const width = LEFT + weeks * STEP;
+const height = TOP + 7 * STEP;
+
+// A month label above the first week that starts in that month.
+const months = cells
+  .filter(
+    cell =>
+      new Date(cell.date).getUTCDate() <= 7 &&
+      new Date(cell.date).getUTCDay() === 0
+  )
+  .map(cell => ({
+    x: cell.x,
+    label: new Date(cell.date).toLocaleString("en", {
+      month: "short",
+      timeZone: "UTC",
+    }),
+  }));
+
+const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString("en", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+---
+
+{days.length > 0 && (
+  <Section id="github-heading" label="GitHub activity">
+    <div class="activity">
+      <p class="summary">
+        <a href={`https://github.com/${user}`} rel="noopener">
+          {total} contributions in the last year ↗
+        </a>
+      </p>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label={`${total} GitHub contributions in the last year`}
+      >
+        {months.map(({ x, label }) => (
+          <text x={x} y={10} class="axis">
+            {label}
+          </text>
+        ))}
+        {[
+          ["Mon", 1],
+          ["Wed", 3],
+          ["Fri", 5],
+        ].map(([label, row]) => (
+          <text x={0} y={TOP + (row as number) * STEP + CELL - 1} class="axis">
+            {label}
+          </text>
+        ))}
+        {cells.map(cell => (
+          <rect
+            x={cell.x}
+            y={cell.y}
+            width={CELL}
+            height={CELL}
+            rx={2}
+            class={`level-${cell.level}`}
+          >
+            <title>
+            {cell.count === 0 ? "No" : cell.count} contribution{cell.count === 1 ? "" : "s"} on {formatDate(cell.date)}
+          </title>
+          </rect>
+        ))}
+      </svg>
+      <p class="legend" aria-hidden="true">
+        Less
+        {[0, 1, 2, 3, 4].map(level => (
+          <span class={`swatch level-${level}`} />
+        ))}
+        More
+      </p>
+    </div>
+  </Section>
+)}
+
+<style>
+  .activity {
+    margin-top: 1.25rem;
+  }
+  .summary {
+    margin-bottom: 0.75rem;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+  }
+  .summary a {
+    color: var(--fg-muted);
+    transition: color 120ms;
+  }
+  .summary a:hover {
+    color: var(--accent);
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .axis {
+    font-family: var(--font-ui);
+    font-size: 8px;
+    fill: var(--fg-muted);
+  }
+  .level-0 {
+    fill: var(--bg-raised);
+    background: var(--bg-raised);
+  }
+  .level-1 {
+    fill: color-mix(in oklab, var(--accent) 35%, var(--bg));
+    background: color-mix(in oklab, var(--accent) 35%, var(--bg));
+  }
+  .level-2 {
+    fill: color-mix(in oklab, var(--accent) 55%, var(--bg));
+    background: color-mix(in oklab, var(--accent) 55%, var(--bg));
+  }
+  .level-3 {
+    fill: color-mix(in oklab, var(--accent) 78%, var(--bg));
+    background: color-mix(in oklab, var(--accent) 78%, var(--bg));
+  }
+  .level-4 {
+    fill: var(--accent);
+    background: var(--accent);
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--fg-muted);
+  }
+  .swatch {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 2px;
+  }
+</style>

@@ -1,0 +1,27 @@
+---
+import Layout from "@sage/layouts/Layout.astro";
+import Header from "@sage/components/Header.astro";
+import Main from "@sage/components/Main.astro";
+import Footer from "@sage/components/Footer.astro";
+import config from "@sage/config";
+import SocialList from "@sage/components/SocialList.astro";
+import ResumeRequest from "../components/ResumeRequest.astro";
+---
+
+<Layout
+  title={`Contact | ${config.site.title}`}
+  description="How to reach Tanay Alpkonur."
+>
+  <Header />
+
+  <Main
+    pageTitle="Contact"
+    pageDesc="Questions, ideas or opportunities: I'd like to hear from you."
+  >
+    <SocialList />
+
+    <ResumeRequest />
+  </Main>
+
+  <Footer />
+</Layout>

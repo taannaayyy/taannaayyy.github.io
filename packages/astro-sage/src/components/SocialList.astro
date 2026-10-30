@@ -1,0 +1,75 @@
+---
+import config from "@sage/config";
+
+// Filled brand icons (Font Awesome Free, CC BY 4.0) named like `socials`.
+const icons = import.meta.glob<{
+  default: (_props: Record<string, unknown>) => unknown;
+}>("../assets/icons/brands/*.svg");
+
+const items = await Promise.all(
+  config.socials.map(async ({ name, url, label }) => {
+    const mod = await icons[`../assets/icons/brands/${name}.svg`]?.();
+    return {
+      url,
+      label: label ?? name.charAt(0).toUpperCase() + name.slice(1),
+      Icon: mod?.default,
+    };
+  })
+);
+---
+
+<ul class="social-list">
+  {items.map(({ url, label, Icon }) => (
+    <li>
+      <a
+        href={url}
+        rel={url.startsWith("http") ? "noopener" : undefined}
+        class="social-link"
+      >
+        <span class="social-icon" aria-hidden="true">
+          {Icon && <Icon fill="currentColor" />}
+        </span>
+        {label}
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .social-list {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 0.75rem 2rem;
+  }
+  @media (min-width: 40rem) {
+    .social-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.75rem;
+    }
+  }
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+    transition: color 120ms;
+  }
+  .social-link:hover {
+    color: var(--accent);
+  }
+  /* Same box for every icon, so wide (mail) and narrow (kaggle) glyphs line up. */
+  .social-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: none;
+  }
+  .social-icon :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+</style>

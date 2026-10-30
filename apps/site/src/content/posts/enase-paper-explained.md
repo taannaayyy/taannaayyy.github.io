@@ -8,7 +8,7 @@ draft: true
 
 <!--
 Draft. Before publishing: set pubDatetime to the real date and remove draft: true.
-- tags: topic tags shared with projects (llms, nlp, computer-vision, ml-in-finance)
+- tags: e.g. ["nlp", "llms"]; posts get tag pages, projects get a tag filter
 - math: false if the post has no math (skips KaTeX CSS)
 Syntax for callouts, code, math and diagrams: FEATURES.md › Writing features.
 -->

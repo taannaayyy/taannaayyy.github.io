@@ -1,0 +1,22 @@
+---
+/** A page section with the theme's small-caps label above a rule. */
+type Props = { id: string; label: string };
+
+const { id, label } = Astro.props;
+---
+
+<section aria-labelledby={id} class="mt-14">
+  <h2 id={id} class="section-label small-caps">
+    {label}
+  </h2>
+  <slot />
+</section>
+
+<style>
+  .section-label {
+    color: var(--fg-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+</style>

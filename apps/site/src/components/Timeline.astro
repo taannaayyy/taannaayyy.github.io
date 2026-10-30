@@ -1,0 +1,321 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { timeline } from "../data/about";
+
+// The photo is optional until it's added: show a placeholder frame instead.
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/about/childhood.{jpg,jpeg,png,webp}",
+  { eager: true }
+);
+const photo = Object.values(photos)[0]?.default;
+
+// Gallery photos live in src/assets/about/<gallery>/, shown in file-name order.
+const galleryFiles = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/about/*/*.{jpg,jpeg,png,webp}",
+  { eager: true }
+);
+const galleryFor = (name: string) =>
+  Object.entries(galleryFiles)
+    .filter(([path]) => path.split("/").at(-2) === name)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, mod]) => mod.default);
+---
+
+<ol class="timeline">
+  {timeline.map(item => (
+    <li class:list={["entry", { "has-photo": item.photo }]}>
+      <span class="dot" aria-hidden="true" />
+      <p class="label small-caps">{item.label}</p>
+      {item.photo && (
+        <figure class="polaroid">
+          {photo ? (
+            <Image
+              src={photo}
+              alt="Me as a child, smiling in an armchair with a laptop on my lap"
+              width={560}
+              loading="eager"
+            />
+          ) : (
+            <div class="placeholder">
+              Childhood photo goes here
+              <br />
+              <code>src/assets/about/childhood.jpg</code>
+            </div>
+          )}
+          <figcaption>where it all began</figcaption>
+        </figure>
+      )}
+      {item.title && <h2 class="title">{item.title}</h2>}
+      <p class="text">{item.text}</p>
+      {item.gallery &&
+        (() => {
+          const images = galleryFor(item.gallery);
+          return images.length > 0 ? (
+            <div class="gallery">
+              {images.map((image, i) => (
+                <a href={image.src} class="gallery-photo">
+                  <Image
+                    src={image}
+                    alt={`${item.label}, photo ${i + 1}`}
+                    width={480}
+                  />
+                </a>
+              ))}
+            </div>
+          ) : (
+            import.meta.env.DEV && (
+              <div class="placeholder gallery-placeholder">
+                Competition photos go here
+                <br />
+                <code>src/assets/about/{item.gallery}/</code>
+              </div>
+            )
+          );
+        })()}
+      {item.links && (
+        <ul class="links">
+          {item.links.map(link => (
+            <li>
+              <a href={link.url} rel="noopener">
+                {link.text} ↗
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      {item.paper && (
+        <div class="paper">
+          <a href={item.paper.url} rel="noopener" class="paper-title">
+            {item.paper.title} ↗
+          </a>
+          <p class="paper-authors">
+            {item.paper.authors.map((author, i) => (
+              <>
+                {i > 0 && ", "}
+                {author === "Tanay Alpkonur" ? (
+                  <strong>{author}</strong>
+                ) : (
+                  author
+                )}
+              </>
+            ))}
+          </p>
+          <p class="paper-venue">
+            {item.paper.venue} DOI:{" "}
+            <a href={`https://doi.org/${item.paper.doi}`} rel="noopener">
+              {item.paper.doi}
+            </a>
+          </p>
+        </div>
+      )}
+    </li>
+  ))}
+</ol>
+
+<style>
+  .timeline {
+    position: relative;
+    margin-top: 2.5rem;
+    padding-inline-start: 2rem;
+  }
+  .entry {
+    position: relative;
+    padding-bottom: 3rem;
+  }
+  .entry:last-child {
+    padding-bottom: 0;
+  }
+  /* Each entry draws the line down to the next dot; it ends at "Now". */
+  .entry::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(-2rem + 0.4rem);
+    top: 1.15rem;
+    bottom: -0.3rem;
+    width: 2px;
+    background: var(--border);
+  }
+  /* The story starts from nothing: the first stretch fades in above the dot. */
+  .entry:first-child::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(-2rem + 0.4rem);
+    top: -2rem;
+    height: 2.1rem;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--border));
+  }
+  .entry:nth-last-child(2)::before {
+    background: linear-gradient(to bottom, var(--border), var(--accent));
+  }
+  .entry:last-child::before {
+    display: none;
+  }
+  .dot {
+    position: absolute;
+    inset-inline-start: calc(-2rem + 0.4rem - 0.35rem + 1px);
+    top: 0.3rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 2px solid var(--fg-muted);
+  }
+  .entry:last-child .dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent);
+  }
+  .label {
+    font-size: 0.8rem;
+    color: var(--fg-muted);
+  }
+  .title {
+    margin-top: 0.35rem;
+    font-size: 1.45rem;
+    line-height: 1.25;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .text {
+    margin-top: 0.6rem;
+    line-height: 1.7;
+    text-wrap: pretty;
+    color: color-mix(in oklab, var(--fg) 88%, var(--bg));
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+  .gallery-photo {
+    display: block;
+    padding: 0.4rem;
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 20px -12px rgb(58 49 38 / 0.45);
+    transition: transform 300ms ease;
+  }
+  .gallery-photo:nth-child(odd) {
+    transform: rotate(-1deg);
+  }
+  .gallery-photo:nth-child(even) {
+    transform: rotate(1deg);
+  }
+  .gallery-photo:hover {
+    transform: rotate(0deg) scale(1.03);
+  }
+  .gallery-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .gallery-placeholder {
+    margin-top: 1.25rem;
+    aspect-ratio: auto;
+    padding-block: 2rem;
+  }
+  .links {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+  }
+  .links a {
+    color: var(--accent);
+  }
+  .links a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .paper {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0.375rem;
+    background: var(--bg-raised);
+  }
+  .paper-title {
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--fg);
+    transition: color 120ms;
+  }
+  .paper-title:hover {
+    color: var(--accent);
+  }
+  .paper-authors {
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+    color: var(--fg-muted);
+  }
+  .paper-authors strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  .paper-venue {
+    margin-top: 0.4rem;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--fg-muted);
+  }
+  .paper-venue a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .paper-venue a:hover {
+    color: var(--accent);
+  }
+  .polaroid {
+    margin: 1rem 0 1.25rem;
+    max-width: 22rem;
+    padding: 0.75rem 0.75rem 0;
+    background: #fffdf8;
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 28px -14px rgb(58 49 38 / 0.45);
+    transform: rotate(-1.5deg);
+    transition: transform 300ms ease;
+  }
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.02);
+  }
+  .polaroid :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: sepia(0.15);
+  }
+  .placeholder {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    padding: 1rem;
+    border: 2px dashed var(--border);
+    text-align: center;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: #675c4f;
+  }
+  .polaroid figcaption {
+    padding: 0.7rem 0 0.9rem;
+    text-align: center;
+    font-family: var(--font-body);
+    font-style: italic;
+    color: #675c4f;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .polaroid,
+    .polaroid:hover,
+    .gallery-photo,
+    .gallery-photo:hover {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
